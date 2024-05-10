@@ -102,19 +102,27 @@ const Navbar = () => {
       </div>
       <div className="navbar-end">
         {!user && (
-          <Link
-            to="/login"
-            className="btn btn-sm bg-blue-400 hover:bg-blue-500 text-gray-700"
-          >
-            Login
-          </Link>
+          <>
+            <input
+              onChange={handleTheme}
+              type="checkbox"
+              className="toggle toggle-xs sm:toggle-sm mr-3"
+              checked={theme === "sunset"}
+            />
+            <Link
+              to="/login"
+              className="btn btn-sm bg-blue-400 hover:bg-blue-500 text-gray-700"
+            >
+              Login
+            </Link>
+          </>
         )}
         {user && (
           <>
             <input
               onChange={handleTheme}
               type="checkbox"
-              className="toggle toggle-xs sm:toggle-md mr-3"
+              className="toggle toggle-xs sm:toggle-sm mr-3"
               checked={theme === "sunset"}
             />
             <div className="dropdown dropdown-end">
