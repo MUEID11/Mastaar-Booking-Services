@@ -1,13 +1,22 @@
-const Main = () => {
-    return (
-        <div>
-            {/* Navbar */}
-            <h1>main</h1>
-            {/* Outlet */}
+import { Outlet } from "react-router-dom";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 
-            {/* Footer */}
-        </div>
-    );
+const Main = () => {
+  return (
+    <div>
+      {/* Navbar */}
+      <Navbar />
+
+      <div className="min-h-[calc(100vh-260px)]">
+        {/* Outlet */}
+        <Outlet />
+      </div>
+
+      {/* Footer */}
+      <Footer />
+    </div>
+  );
 };
 
 export default Main;
