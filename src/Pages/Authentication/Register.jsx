@@ -4,11 +4,13 @@ import logo from "../../../public/vite.png";
 import { FaGoogle } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { BiHide, BiShow } from "react-icons/bi";
 const Register = () => {
+    const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const {createUser, user,setUser,  signInWithGoogle,updateUser} = useAuth();
-    
     const handleGoogleSignIn = async() =>{
         try {
             await signInWithGoogle();
@@ -26,6 +28,12 @@ const Register = () => {
         const password = form.password.value;
         const name = form.name.value;
         const photo = form.photo.value;
+        if (!/(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{6,})/.test(password)) {
+            toast.error(
+              "Password must be at least 6 characters long and contain at least one special character and one uppercase letter."
+            );
+            return;
+          }
         try {
             const result = await createUser(email, password)
             console.log(result)
@@ -83,6 +91,7 @@ const Register = () => {
                   Username
                 </label>
                 <input
+                required
                   id="name"
                   autoComplete="name"
                   name="name"
@@ -98,6 +107,7 @@ const Register = () => {
                   Photo URL
                 </label>
                 <input
+                required
                   id="photo"
                   autoComplete="photo"
                   name="photo"
@@ -113,6 +123,7 @@ const Register = () => {
                   Email Address
                 </label>
                 <input
+                required
                   id="LoggingEmailAddress"
                   autoComplete="email"
                   name="email"
@@ -120,25 +131,35 @@ const Register = () => {
                   type="email"
                 />
               </div>
-
-              <div className="mt-4">
-                <div className="flex justify-between">
-                  <label
-                    className="block mb-2 text-sm font-medium text-gray-600 "
-                    htmlFor="loggingPassword"
-                  >
-                    Password
-                  </label>
-                </div>
-
-                <input
-                  id="loggingPassword"
-                  autoComplete="current-password"
-                  name="password"
-                  className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300"
-                  type="password"
-                />
+              <div className="space-y-2">
+            <label className="label">
+              <span className="label-text">Password</span>
+            </label>
+            <div className="relative">
+              <input
+                type={showPass ? "text" : "password"}
+                // onChange={(e) => validatePassword(e.target.value)}
+                placeholder="password"
+                name="password"
+                id="password"
+                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300"
+                required
+              />
+              <div>
+                {showPass ? (
+                  <BiShow
+                    onClick={() => setShowPass(false)}
+                    className="text-2xl absolute top-3 right-2"
+                  />
+                ) : (
+                  <BiHide
+                    onClick={() => setShowPass(true)}
+                    className="text-2xl absolute top-3 right-2"
+                  />
+                )}
               </div>
+            </div>
+          </div>
               <div className="mt-6">
                 <button
                   type="submit"

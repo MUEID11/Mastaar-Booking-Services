@@ -20,7 +20,7 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="navbar bg-base-100 container mx-auto px-5">
+    <div className="navbar bg-base-100 container mx-auto px-5 z-50">
       <div className="navbar-start">
         <div className="dropdown">
           <div
@@ -38,7 +38,7 @@ const Navbar = () => {
               <NavLink to="/">Home</NavLink>
             </li>
             <li>
-              <NavLink to="/services">Services</NavLink>
+              <NavLink to="/all">All Services</NavLink>
             </li>
             {user && (
               <li>
@@ -74,7 +74,7 @@ const Navbar = () => {
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/services">Services</NavLink>
+            <NavLink to="/all">All Services</NavLink>
           </li>
           {user && (
             <li>

@@ -4,6 +4,12 @@ import Home from "../Pages/Home";
 import Login from "../Pages/Authentication/Login"
 import Register from "../Pages/Authentication/Register"
 import Error from "../Pages/Error";
+import AddService from "../Pages/AddService";
+import PrivateRoute from "./PrivateRoute";
+import BookService from "../Pages/BookService";
+import ManageService from "../Pages/ManageService";
+import TodoService from "../Pages/TodoService";
+import AllServices from "../Pages/AllServices";
 const router = createBrowserRouter([
     {
         path:'/',
@@ -21,6 +27,26 @@ const router = createBrowserRouter([
             {
                 path: '/register',
                 element: <Register/>
+            },
+            {
+                path: '/all',
+                element: <AllServices/>
+            },
+            {
+                path:'/add',
+                element: <PrivateRoute><AddService/></PrivateRoute>
+            },
+            {
+                path: '/book',
+                element: <PrivateRoute><BookService/></PrivateRoute>
+            },
+            {
+                path:"/manage",
+                element: <PrivateRoute><ManageService/></PrivateRoute>
+            },
+            {
+                path:'todo',
+                element: <PrivateRoute><TodoService/></PrivateRoute>
             }
         ]
     }
