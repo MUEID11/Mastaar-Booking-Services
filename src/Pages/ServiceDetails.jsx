@@ -1,50 +1,371 @@
-import { FaRegHandPointRight } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { FaDollarSign, FaRegHandPointRight } from "react-icons/fa6";
+import { Link, useParams } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
 
 const ServiceDetails = () => {
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
+  const [date, setDate] = useState("");
+  const [instruction, setInstruction] = useState("");
+  const openModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
+
+  const handleInstructionChange = (e) => {
+    setInstruction(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const serviceId = form.serviceId.value;
+    const serviceImage = form.imageUrl.value;
+    const providerName = form.providerName.value;
+    const providerEmail = form.providerEmail.value;
+    const serviceName = form.serviceName.value;
+    const price = form.price.value;
+    const buyerEmail = form.currentUserEmail.value;
+    const buyerName = form.currentUserName.value;
+    const serviceStatus = "pending";
+
+    const bookingData = {
+      providerName,
+      providerEmail,
+      serviceImage,
+      serviceName,
+      price,
+      buyerName,
+      serviceId,
+      buyerEmail,
+      serviceStatus,
+    };
+    console.table(bookingData);
+  };
+  const { user } = useAuth();
+  const [service, setService] = useState({});
+  const { id } = useParams();
+  useEffect(() => {
+    const getService = async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/service/${id}`
+      );
+      setService(data);
+    };
+    getService();
+  }, [id]);
+  const {
+    _id,
+    location,
+    providerImage,
+    imageUrl,
+    description,
+    providerName,
+    providerEmail,
+    name,
+    price,
+  } = service || {};
   return (
     <div>
       <section className=" dark:bg-gray-900">
+        <h2 className="sm:text-4xl text-2xl font-bold text-center my-6">
+          Service Details of: {name}
+        </h2>
         <div className="container flex flex-col-reverse px-6 py-10 mx-auto space-y-6 lg:h-[32rem] lg:py-16 lg:flex-row lg:items-center">
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-1/2 mt-8">
             <div className="lg:max-w-lg">
-              <h1 className="text-3xl font-semibold tracking-wide  dark:text-white lg:text-4xl">
-                Easiest way to create your website
-              </h1>
-
+              <h3 className="text-3xl font-semibold tracking-wide  dark:text-white lg:text-4xl mb-1">
+                {name}
+              </h3>
+              <div className="flex items-center space-x-3 mt-4">
+                <img
+                  alt=""
+                  className="size-8 sm:size-12 rounded-full ring-2 ring-offset-4 dark:bg-gray-500 dark:ring-gray-300 dark:ring-offset-gray-100"
+                  src={providerImage}
+                />
+                <div>
+                  <h5 className="text-xl font-medium tracking-tight">
+                    {providerName}
+                  </h5>
+                  <p>{providerEmail}</p>
+                </div>
+              </div>
               <div className="mt-8 space-y-5">
                 <p className="flex items-center -mx-2  dark:text-gray-200">
                   <FaRegHandPointRight className="text-blue-500 ml-2" />
 
-                  <span className="mx-2">Clean and Simple Layout</span>
+                  <span className="mx-2">{description}</span>
                 </p>
 
                 <p className="flex items-center -mx-2  dark:text-gray-200">
                   <FaRegHandPointRight className="text-blue-500 ml-2" />
-                  <span className="mx-2">Just Copy Paste Codeing</span>
+                  <span className="mx-2">Best toutoring service online</span>
+                </p>
+                <p className="flex items-center -mx-2  dark:text-gray-200">
+                  <FaRegHandPointRight className="text-blue-500 ml-2" />
+                  <span className="mx-2">
+                    Flexible payment methods. Monthly | Yearly | Full Course
+                  </span>
+                </p>
+                <p className="flex items-center -mx-2  dark:text-gray-200">
+                  <FaRegHandPointRight className="text-blue-500 ml-2" />
+                  <span className="mx-2">Location: {location}</span>
                 </p>
 
                 <p className="flex items-center -mx-2  dark:text-gray-200">
                   <FaRegHandPointRight className="text-blue-500 ml-2" />
-                  <span className="mx-2">Easy to Use</span>
+                  <span className="mx-2 flex items-center">
+                    Only {price} <FaDollarSign />
+                  </span>
                 </p>
               </div>
             </div>
-            <div className="my-12">
-              <Link
-                className="relative inline-flex items-center justify-center px-10 py-4 overflow-hidden font-mono font-medium tracking-tighter text-white bg-gray-800 rounded-lg group"
-              >
-                <span className="absolute w-0 h-0 transition-all duration-500 ease-out bg-blue-500 rounded-full group-hover:w-56 group-hover:h-56"></span>
-                <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-gray-700"></span>
+            <div className="my-12 space-x-4">
+              <Link to={"/all"} className="btn btn-sm ">
+                <span className="relative">Explore Services</span>
+              </Link>
+              <Link onClick={openModal} className="btn btn-sm">
                 <span className="relative">Book Now</span>
               </Link>
+              {/* Render the modal component */}
+              {isModalOpen && (
+                <div className="fixed  inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+                  <div className="relative w-full max-w-[600px] mx-auto my-2">
+                    {/*content*/}
+                    <div className="relative flex flex-col w-full bg-white border-0 rounded-lg shadow-lg outline-none focus:outline-none">
+                      {/*header*/}
+                      <div className="flex items-start justify-between p-5 border-b border-solid rounded-t border-blueGray-200">
+                        <h3 className="text-xl font-semibold text-center">
+                          Book Service
+                        </h3>
+                        <button
+                          className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                          onClick={closeModal}
+                        >
+                          <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                            ×
+                          </span>
+                        </button>
+                      </div>
+                      {/*body*/}
+                      <div className="relative flex-auto p-6">
+                        <form onSubmit={handleSubmit}>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* Provider Name */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="providerName"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Provider Name
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={providerName}
+                                id="providerName"
+                                autoComplete="providerName"
+                                name="providerName"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Provider Email Address */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="providerEmail"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Provider Email Address
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={providerEmail}
+                                id="providerEmail"
+                                autoComplete="email"
+                                name="providerEmail"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="email"
+                              />
+                            </div>
+                            {/* Provider Image URL */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="providerImage"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service Image URL
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={imageUrl}
+                                id="imageUrl"
+                                autoComplete="imageUrl"
+                                name="imageUrl"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Service Name */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="serviceName"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service Name
+                              </label>
+                              <input
+                                defaultValue={name}
+                                disabled
+                                id="serviceName"
+                                autoComplete="serviceName"
+                                name="serviceName"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Price */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="price"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Price
+                              </label>
+                              <input
+                                defaultValue={price}
+                                disabled
+                                id="price"
+                                autoComplete="price"
+                                name="price"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Current User Name */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="currentUserName"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Current User Name
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={user?.displayName}
+                                id="currentUserName"
+                                autoComplete="currentUserName"
+                                name="currentUserName"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Service ID */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="serviceId"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service ID
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={_id}
+                                id="serviceId"
+                                autoComplete="serviceId"
+                                name="serviceId"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                            {/* Current User email */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="currentUserEmail"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Current User Email
+                              </label>
+                              <input
+                                disabled
+                                defaultValue={user?.email}
+                                id="currentUserEmail"
+                                autoComplete="email"
+                                name="currentUserEmail"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="email"
+                              />
+                            </div>
+                            {/* Service Taking Date */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="serviceDate"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service Taking Date
+                              </label>
+                              <input
+                                required
+                                id="serviceDate"
+                                autoComplete="serviceDate"
+                                name="serviceDate"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="date"
+                              />
+                            </div>
+                            {/* Service Area */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="serviceArea"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service Area
+                              </label>
+                              <input
+                                required
+                                id="serviceArea"
+                                autoComplete="serviceArea"
+                                name="serviceArea"
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                type="text"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-end p-2 border-t border-solid rounded-b border-blueGray-200 mt-2">
+                            <button
+                              className="btn btn-md text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 mr-4"
+                              onClick={closeModal}
+                            >
+                              Close
+                            </button>
+                            <button
+                              className="btn btn-md text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                              type="submit"
+                            >
+                              Purchase
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                      {/*footer*/}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="flex items-center justify-center w-full h-96 lg:w-1/2">
             <img
               className="object-cover w-full h-full mx-auto rounded-md lg:max-w-2xl"
-              src="https://images.unsplash.com/photo-1543269664-7eef42226a21?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+              src={imageUrl}
               alt="glasses photo"
             />
           </div>
