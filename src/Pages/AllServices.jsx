@@ -2,7 +2,7 @@ import React from 'react';
 
 const AllServices = () => {
     return (
-        <div>
+        <div className='container mx-auto my-12 p-4'>
             All
         </div>
     );

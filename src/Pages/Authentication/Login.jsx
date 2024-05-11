@@ -4,10 +4,12 @@ import logo from "../../../public/vite.png";
 import { FaGoogle } from "react-icons/fa6";
 import login from "./../../assets/login.svg";
 import toast from "react-hot-toast";
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle,user, loading } = useAuth();
+ 
   //handle googleSignIn
   const handleGoogleSignIn = async () => {
     try {
@@ -35,6 +37,7 @@ const Login = () => {
       toast.error(error?.message);
     }
   };
+  if(user || loading) return;
   return (
     <div>
       <div className="flex justify-center items-center min-h-[calc(100vh-260px)]">
