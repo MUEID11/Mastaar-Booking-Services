@@ -3,25 +3,20 @@ import { useEffect, useState } from "react";
 import { FaDollarSign, FaRegHandPointRight } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ServiceDetails = () => {
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
-  const [date, setDate] = useState("");
-  const [instruction, setInstruction] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+
   const openModal = () => {
     setIsModalOpen(true); // Open the modal
   };
 
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
-  };
-  const handleDateChange = (e) => {
-    setDate(e.target.value);
-  };
-
-  const handleInstructionChange = (e) => {
-    setInstruction(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -36,6 +31,7 @@ const ServiceDetails = () => {
     const buyerEmail = form.currentUserEmail.value;
     const buyerName = form.currentUserName.value;
     const serviceStatus = "pending";
+    const purchaseDate = startDate;
 
     const bookingData = {
       providerName,
@@ -47,6 +43,7 @@ const ServiceDetails = () => {
       serviceId,
       buyerEmail,
       serviceStatus,
+      purchaseDate,
     };
     console.table(bookingData);
   };
@@ -303,23 +300,6 @@ const ServiceDetails = () => {
                                 type="email"
                               />
                             </div>
-                            {/* Service Taking Date */}
-                            <div className="mt-1">
-                              <label
-                                htmlFor="serviceDate"
-                                className="block text-sm font-medium text-gray-600"
-                              >
-                                Service Taking Date
-                              </label>
-                              <input
-                                required
-                                id="serviceDate"
-                                autoComplete="serviceDate"
-                                name="serviceDate"
-                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                                type="date"
-                              />
-                            </div>
                             {/* Service Area */}
                             <div className="mt-1">
                               <label
@@ -335,6 +315,20 @@ const ServiceDetails = () => {
                                 name="serviceArea"
                                 className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
                                 type="text"
+                              />
+                            </div>
+                            {/* Service Taking Date */}
+                            <div className="mt-1">
+                              <label
+                                htmlFor="serviceDate"
+                                className="block text-sm font-medium text-gray-600"
+                              >
+                                Service Taking Date
+                              </label>
+                              <DatePicker
+                                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)}
                               />
                             </div>
                           </div>
