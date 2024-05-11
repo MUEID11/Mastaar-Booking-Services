@@ -10,6 +10,7 @@ import BookService from "../Pages/BookService";
 import ManageService from "../Pages/ManageService";
 import TodoService from "../Pages/TodoService";
 import AllServices from "../Pages/AllServices";
+import ServiceDetails from "../Pages/ServiceDetails";
 const router = createBrowserRouter([
     {
         path:'/',
@@ -19,7 +20,6 @@ const router = createBrowserRouter([
             {
                 index:true,
                 element: <Home/>,
-                loader: () => fetch(`${import.meta.env.VITE_API_URL}/jobs`),
             },
             {
                 path: '/login',
@@ -32,7 +32,6 @@ const router = createBrowserRouter([
             {
                 path: '/all',
                 element: <AllServices/>,
-                loader: () => fetch(`${import.meta.env.VITE_API_URL}/alljobs`)
             },
             {
                 path:'/add',
@@ -49,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path:'todo',
                 element: <PrivateRoute><TodoService/></PrivateRoute>
+            },
+            {
+                path: '/servicedetails/:id',
+                element: <PrivateRoute><ServiceDetails/></PrivateRoute>
             }
         ]
     }

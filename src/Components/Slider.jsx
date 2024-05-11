@@ -27,19 +27,19 @@ export default function Slider({ services }) {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
+        className="mySwiper z-[-1]"
       >
         {services.map((slide) => (
           <SwiperSlide key={slide._id}>
-            <div className="bg-white">
+            <div className="dark:text-gray-800">
   <div className="lg:flex">
-    <div className="flex items-center justify-center w-full px-6 py-8 lg:h-[32rem] lg:w-1/2">
+    <div className="flex flex-col-reverse items-center justify-center w-full px-6 sm:py-8 lg:h-[32rem] lg:w-1/2 ">
       <div className="max-w-xl">
-        <h2 className="text-3xl font-semibold text-gray-800 lg:text-4xl">
+        <h2 className="text-3xl font-semibold  lg:text-4xl">
           {slide.name}
         </h2>
 
-        <p className="mt-4 text-sm text-gray-600 lg:text-base">
+        <p className="mt-4 text-sm  lg:text-base">
           {slide.description}
         </p>
 

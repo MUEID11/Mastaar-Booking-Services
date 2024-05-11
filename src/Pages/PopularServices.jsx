@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import PopularServiceCard from "../Components/PopularServiceCard";
+import ServiceCard from "../Components/ServiceCard";
 
 const PopularServices = ({ services }) => {
   return (
@@ -14,14 +14,15 @@ const PopularServices = ({ services }) => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 my-6">
         {services.map((service) => (
-          <PopularServiceCard
+          <ServiceCard
             key={service._id}
             service={service}
-          ></PopularServiceCard>
+          ></ServiceCard>
         ))}
       </div>
       <div className="flex items-center justify-center mt-20">
-        <Link to='/all'
+        <Link
+          to="/all"
           href="#_"
           className="relative px-5 py-3 overflow-hidden font-medium text-gray-600 bg-gray-100 border border-gray-100 rounded-lg shadow-inner group"
         >
@@ -31,7 +32,7 @@ const PopularServices = ({ services }) => {
           <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-gray-600 group-hover:h-full ease"></span>
           <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-gray-900 opacity-0 group-hover:opacity-100"></span>
           <span className="relative transition-colors duration-300 delay-200 group-hover:text-white ease">
-           View All
+            View All
           </span>
         </Link>
       </div>

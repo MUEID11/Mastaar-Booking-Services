@@ -21,7 +21,7 @@ const Navbar = () => {
   };
   return (
     <div className="navbar bg-base-100 container mx-auto px-5 z-50">
-      <div className="navbar-start">
+      <div className="navbar-start z-50">
         <div className="dropdown">
           <div
             tabIndex={0}
@@ -32,7 +32,7 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-64"
+            className="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-64 "
           >
             <li>
               <NavLink to="/">Home</NavLink>
@@ -68,7 +68,7 @@ const Navbar = () => {
           <img className="w-10 rounded-full" src={logo} alt="logo" /> Mastaar
         </NavLink>
       </div>
-      <div className="navbar-center hidden lg:flex">
+      <div className="navbar-center hidden lg:flex z-50">
         <ul className="menu menu-horizontal px-1">
           <li>
             <NavLink to="/">Home</NavLink>
@@ -100,7 +100,7 @@ const Navbar = () => {
           )}
         </ul>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end z-50">
         {!user && (
           <>
             <input
