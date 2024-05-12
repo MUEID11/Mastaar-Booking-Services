@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import toast from "react-hot-toast";
 
 const ServiceDetails = () => {
   //modal
@@ -19,7 +20,8 @@ const ServiceDetails = () => {
     setIsModalOpen(false); // Close the modal
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
+    if(user?.email === providerEmail)return toast.error(`You can't buy your own services`)
     e.preventDefault();
     const form = e.target;
     const serviceId = form.serviceId.value;
@@ -45,7 +47,12 @@ const ServiceDetails = () => {
       serviceStatus,
       purchaseDate,
     };
-    console.table(bookingData);
+    try{
+        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/bookservice`, bookingData)
+        console.log(data)
+    }catch(error){
+        console.log(error.message)
+    }
   };
   const { user } = useAuth();
   const [service, setService] = useState({});
