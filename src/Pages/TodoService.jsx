@@ -1,16 +1,43 @@
 import { Helmet } from "react-helmet";
+import useAuth from "../Hooks/useAuth";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const TodoService = () => {
+  const { user } = useAuth();
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, [user]);
+  const getData = async () => {
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_API_URL}/todoservice/${user?.email}`
+    );
+    setTodos(data);
+  };
+  const handleStatus = async (id, previousStatus, serviceStatus) => {
+    console.log(id, previousStatus, serviceStatus);
+    if (previousStatus === serviceStatus)
+      return toast.error("Already accepted");
+    const { data } = await axios.patch(
+      `${import.meta.env.VITE_API_URL}/updatestatus/${id}`,
+      {serviceStatus}
+    );
+    console.log(data);
+    getData();
+  };
   return (
     <section className="container px-4 mx-auto pt-12">
       <Helmet>
         <title>Services-To-Do</title>
       </Helmet>
       <div className="flex items-center gap-x-3">
-        <h2 className="text-lg font-medium text-gray-800 ">Service TO DO</h2>
+        <h2 className="text-lg font-medium">Service-To-Do</h2>
 
         <span className="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full ">
-          05 Requests
+          {todos.length}
         </span>
       </div>
 
@@ -34,7 +61,7 @@ const TodoService = () => {
                       className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
                       <div className="flex items-center gap-x-3">
-                        <span>Email</span>
+                        <span>Brought By</span>
                       </div>
                     </th>
 
@@ -42,7 +69,7 @@ const TodoService = () => {
                       scope="col"
                       className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
-                      <span>Deadline</span>
+                      <span>Date</span>
                     </th>
 
                     <th
@@ -58,7 +85,7 @@ const TodoService = () => {
                       scope="col"
                       className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
-                      Category
+                      Requested Location
                     </th>
 
                     <th
@@ -73,76 +100,116 @@ const TodoService = () => {
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200 ">
-                  <tr>
-                    <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                      Build Dynamic Website
-                    </td>
-                    <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                      example@gmail.com
-                    </td>
+                <tbody className="divide-y divide-gray-200 ">
+                  {todos.map((todo) => (
+                    <tr key={todo?._id}>
+                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                        {todo.name}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                        {todo.buyerEmail}
+                      </td>
 
-                    <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                      10/04/2024
-                    </td>
+                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                        {new Date(todo.purchaseDate).toLocaleDateString()}
+                      </td>
 
-                    <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                      $200
-                    </td>
-                    <td className="px-4 py-4 text-sm whitespace-nowrap">
-                      <div className="flex items-center gap-x-2">
-                        <p
-                          className="px-3 py-1 rounded-full text-blue-500 bg-blue-100/60
+                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                        {todo.price}
+                      </td>
+                      <td className="px-4 py-4 text-sm whitespace-nowrap">
+                        <div className="flex items-center gap-x-2">
+                          <p
+                            className="px-3 py-1 rounded-full text-blue-700 bg-blue-100/60
                            text-xs"
-                        >
-                          Web Development
-                        </p>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                      <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-500">
-                        <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
-                        <h2 className="text-sm font-normal ">Pending</h2>
-                      </div>
-                    </td>
-                    <td className="px-4 py-4 text-sm whitespace-nowrap">
-                      <div className="flex items-center gap-x-6">
-                        <button className="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-5 h-5"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        </button>
-
-                        <button className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-5 h-5"
+                            {todo.location}
+                          </p>
+                        </div>
+                      </td>
+                     {
+                        todo?.serviceStatus === "Rejected" ?  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-red-700">
+                          <span className="h-1.5 w-1.5 rounded-full bg-red-700"></span>
+                          <h2 className="text-sm font-normal ">
+                            {todo.serviceStatus}
+                          </h2>
+                        </div>
+                      </td> :  todo?.serviceStatus === "Pending" ?  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                          <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                          <h2 className="text-sm font-normal ">
+                            {todo.serviceStatus}
+                          </h2>
+                        </div>
+                      </td> : <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                          <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                          <h2 className="text-sm font-normal ">
+                            {todo.serviceStatus}
+                          </h2>
+                        </div>
+                      </td>
+                     }
+                      <td className="px-4 py-4 text-sm whitespace-nowrap">
+                        <div className="flex items-center gap-x-6">
+                          <button
+                            onClick={() =>
+                              handleStatus(
+                                todo._id,
+                                todo.serviceStatus,
+                                "Accepted"
+                              )
+                            }
+                            disabled={todo.serviceStatus === "Rejected"}
+                            className="text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none"
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m4.5 12.75 6 6 9-13.5"
+                              />
+                            </svg>
+                          </button>
+                          {/* reject button */}
+                          <button
+                            onClick={() =>
+                              handleStatus(
+                                todo._id,
+                                todo.serviceStatus,
+                                "Rejected"
+                              )
+                            }
+                            disabled={todo?.serviceStatus === "Accepted"}
+                            className="text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

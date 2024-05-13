@@ -32,8 +32,9 @@ const ServiceDetails = () => {
     const price = form.price.value;
     const buyerEmail = form.currentUserEmail.value;
     const buyerName = form.currentUserName.value;
-    const serviceStatus = "pending";
+    const serviceStatus = "Pending";
     const purchaseDate = startDate;
+    const location = form.serviceArea.value;
     if (user?.email === providerEmail) {
       toast.error(`You can't buy your own services`);
       closeModal();
@@ -51,6 +52,7 @@ const ServiceDetails = () => {
       buyerEmail,
       serviceStatus,
       purchaseDate,
+      location,
     };
     try {
       const { data } = await axios.post(
@@ -91,9 +93,7 @@ const ServiceDetails = () => {
     <div>
       <section className=" dark:bg-gray-900">
         <Helmet>
-            <title>
-                {name}
-            </title>
+          <title>{name}</title>
         </Helmet>
         <h2 className="sm:text-4xl text-2xl font-bold text-center my-6">
           Service Details of: {name}

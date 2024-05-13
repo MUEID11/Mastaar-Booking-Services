@@ -22,11 +22,9 @@ const Navbar = () => {
   };
   return (
     <div className="navbar bg-base-100 container mx-auto px-5 z-50">
-        <Helmet>
-            <title>
-                Mastar
-            </title>
-        </Helmet>
+      <Helmet>
+        <title>Mastar</title>
+      </Helmet>
       <div className="navbar-start z-50">
         <div className="dropdown">
           <div

@@ -6,7 +6,6 @@ import { Helmet } from "react-helmet";
 const BookService = () => {
   const [bookedservices, setBookedServices] = useState([]);
   const { user } = useAuth();
-  console.log(user);
 
   useEffect(() => {
     const getServices = async () => {
@@ -53,6 +52,14 @@ const BookService = () => {
                       className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
                       <div className="flex items-center gap-x-3">
+                        <span>Provider Name</span>
+                      </div>
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500"
+                    >
+                      <div className="flex items-center gap-x-3">
                         <span>Email</span>
                       </div>
                     </th>
@@ -73,29 +80,26 @@ const BookService = () => {
                       </button>
                     </th>
 
-                    <th
-                      scope="col"
-                      className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
-                    >
-                      Provider Name
-                    </th>
 
-                    {/* <th
-                      scope="col"
+                    <th
+                    scope="col"
                       className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
-                      Status
-                    </th> */}
+                      Booking request
+                    </th> 
                   </tr>
                 </thead>
                 <tbody className="">
                   {bookedservices.map((bookedService) => (
-                    <tr key={bookedService._id}>
+                    <tr key={bookedService?._id}>
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {bookedService.name}
+                        {bookedService?.name}
                       </td>
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {bookedService.providerEmail}
+                        {bookedService?.providerName}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
+                        {bookedService?.providerEmail}
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
@@ -105,24 +109,22 @@ const BookService = () => {
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {bookedService.price}
+                        {bookedService?.price}
                       </td>
-                      <td className="px-4 py-4 text-sm whitespace-nowrap">
-                        <div className="flex items-center gap-x-2">
-                          <p
-                            className="px-3 py-1 rounded-full text-blue-500 bg-blue-100/60
-                             text-xs"
-                          >
-                            {bookedService.providerName}
-                          </p>
+                      
+                     {
+                        bookedService?.serviceStatus === "Pending" ? <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-700">
+                          <span className="h-1.5 w-1.5 rounded-full bg-yellow-700"></span>
+                          <h2 className="text-sm font-normal ">{bookedService?.serviceStatus}</h2>
                         </div>
-                      </td>
-                      {/* <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-500">
-                            <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
-                            <h2 className="text-sm font-normal ">Pending</h2>
+                      </td> :  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                            <h2 className="text-sm font-normal ">{bookedService?.serviceStatus}</h2>
                           </div>
-                        </td> */}
+                        </td>
+                     }
                     </tr>
                   ))}
                 </tbody>
