@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { FaAlignLeft } from "react-icons/fa6";
 import logo from "./../../public/vite.png";
 import useAuth from "../Hooks/useAuth";
+import { Helmet } from "react-helmet";
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const initialTheme = localStorage.getItem("theme") || "nord";
@@ -21,6 +22,11 @@ const Navbar = () => {
   };
   return (
     <div className="navbar bg-base-100 container mx-auto px-5 z-50">
+        <Helmet>
+            <title>
+                Mastar
+            </title>
+        </Helmet>
       <div className="navbar-start z-50">
         <div className="dropdown">
           <div
@@ -53,7 +59,7 @@ const Navbar = () => {
                       <NavLink to="/manage">Manage Services</NavLink>
                     </li>
                     <li>
-                      <NavLink to="/book">Book Services</NavLink>
+                      <NavLink to="/book">Booked Services</NavLink>
                     </li>
                     <li>
                       <NavLink to="/todo">Service-To-Do</NavLink>
@@ -89,7 +95,7 @@ const Navbar = () => {
                     <NavLink to="/manage">Manage Services</NavLink>
                   </li>
                   <li>
-                    <NavLink to="/book">Book Services</NavLink>
+                    <NavLink to="/book">Booked Services</NavLink>
                   </li>
                   <li>
                     <NavLink to="/todo">Service-To-Do</NavLink>

@@ -6,6 +6,7 @@ import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { BiHide, BiShow } from "react-icons/bi";
+import { Helmet } from "react-helmet";
 const Register = () => {
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
@@ -48,6 +49,11 @@ const Register = () => {
     }
     return (
     <div>
+        <Helmet>
+            <title>
+                Register
+            </title>
+        </Helmet>
       <div className="flex justify-center items-center min-h-[calc(100vh-260px)]">
         <div className="flex w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg  lg:max-w-4xl my-4">
           <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">

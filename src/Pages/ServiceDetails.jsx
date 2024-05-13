@@ -6,6 +6,7 @@ import useAuth from "../Hooks/useAuth";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 const ServiceDetails = () => {
   //modal
@@ -20,26 +21,30 @@ const ServiceDetails = () => {
     setIsModalOpen(false); // Close the modal
   };
 
-  const handleSubmit = async(e) => {
-    if(user?.email === providerEmail)return toast.error(`You can't buy your own services`)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
     const serviceId = form.serviceId.value;
-    const serviceImage = form.imageUrl.value;
+    const imageUrl = form.imageUrl.value;
     const providerName = form.providerName.value;
     const providerEmail = form.providerEmail.value;
-    const serviceName = form.serviceName.value;
+    const name = form.serviceName.value;
     const price = form.price.value;
     const buyerEmail = form.currentUserEmail.value;
     const buyerName = form.currentUserName.value;
     const serviceStatus = "pending";
     const purchaseDate = startDate;
+    if (user?.email === providerEmail) {
+      toast.error(`You can't buy your own services`);
+      closeModal();
+      return;
+    }
 
     const bookingData = {
       providerName,
       providerEmail,
-      serviceImage,
-      serviceName,
+      imageUrl,
+      name,
       price,
       buyerName,
       serviceId,
@@ -47,11 +52,16 @@ const ServiceDetails = () => {
       serviceStatus,
       purchaseDate,
     };
-    try{
-        const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/bookservice`, bookingData)
-        console.log(data)
-    }catch(error){
-        console.log(error.message)
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/bookservice`,
+        bookingData
+      );
+      toast.success("Service Booking Successfull");
+      closeModal();
+      console.log(data);
+    } catch (error) {
+      console.log(error.message);
     }
   };
   const { user } = useAuth();
@@ -80,6 +90,11 @@ const ServiceDetails = () => {
   return (
     <div>
       <section className=" dark:bg-gray-900">
+        <Helmet>
+            <title>
+                {name}
+            </title>
+        </Helmet>
         <h2 className="sm:text-4xl text-2xl font-bold text-center my-6">
           Service Details of: {name}
         </h2>
@@ -367,7 +382,7 @@ const ServiceDetails = () => {
             <img
               className="object-cover w-full h-full mx-auto rounded-md lg:max-w-2xl"
               src={imageUrl}
-              alt="glasses photo"
+              alt="sevice photo"
             />
           </div>
         </div>

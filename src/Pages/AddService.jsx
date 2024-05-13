@@ -1,6 +1,49 @@
+import { useNavigate } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
+
 function AddService() {
+    const {user} = useAuth();
+    const navigate = useNavigate();
+    const handleFormSubmit = async(e) =>{
+        e.preventDefault();
+        const form = e.target;
+        const providerName = form.providerName.value;
+        const providerEmail = form.providerEmail.value;
+        const providerImage = form.providerImage.value;
+        const name = form.serviceName.value;
+        const imageUrl = form.serviceImage.value;
+        const location = form.location.value;
+        const description = form.description.value;
+        const price = form.price.value;
+        const serviceData = {
+            providerName,
+            providerEmail,
+            providerImage,
+            name,
+            imageUrl,
+            location,
+            description,
+            price
+        }
+        try{
+            const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/addservices`, serviceData)
+            console.table(data)
+            toast.success('Service posted successfully');
+            navigate('/manage')
+        }catch(error){
+            console.log(error.message)
+        }
+    };
   return (
     <div className="p-4 bg-dark dark:text-white container mx-auto">
+        <Helmet>
+            <title>
+                Add Services
+            </title>
+        </Helmet>
       <div className="text-center mb-8">
         <h1 className="text-xl sm:text-3xl font-bold mb-4">Add Service</h1>
         <p>
@@ -14,7 +57,7 @@ function AddService() {
           brighter future through education and empowerment.
         </p>
       </div>
-      <form>
+      <form onSubmit={handleFormSubmit}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="mt-4">
             <label
@@ -25,6 +68,7 @@ function AddService() {
             </label>
             <input
               required
+              defaultValue={user?.displayName}
               id="providerName"
               autoComplete="providerName"
               name="providerName"
@@ -41,6 +85,8 @@ function AddService() {
             </label>
             <input
               required
+              defaultValue={user?.email}
+              disabled
               id="providerEmail"
               autoComplete="email"
               name="providerEmail"
@@ -57,6 +103,8 @@ function AddService() {
             </label>
             <input
               required
+              defaultValue={user?.photoURL}
+              disabled
               id="providerImage"
               autoComplete="providerImage"
               name="providerImage"
@@ -84,15 +132,15 @@ function AddService() {
             <div className="mt-4">
               <label
                 className="block mb-2 text-sm font-medium text-gray-600"
-                htmlFor="providerImage"
+                htmlFor="serviceImage"
               >
-                Provider Image URL
+               Service Image URL
               </label>
               <input
                 required
-                id="providerImage"
-                autoComplete="providerImage"
-                name="providerImage"
+                id="serviceImage"
+                autoComplete="serviceImage"
+                name="serviceImage"
                 className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
                 type="text"
               />
@@ -111,21 +159,21 @@ function AddService() {
               autoComplete="price"
               name="price"
               className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              type="text"
+              type="number"
             />
           </div>
           <div className="mt-4">
             <label
               className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="serviceArea"
+              htmlFor="location"
             >
-              Service Area
+              Service Location
             </label>
             <input
               required
-              id="serviceArea"
-              autoComplete="serviceArea"
-              name="serviceArea"
+              id="location"
+              autoComplete="location"
+              name="location"
               className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
               type="text"
             />

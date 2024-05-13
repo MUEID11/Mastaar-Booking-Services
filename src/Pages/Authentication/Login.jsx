@@ -4,6 +4,7 @@ import logo from "../../../public/vite.png";
 import { FaGoogle } from "react-icons/fa6";
 import login from "./../../assets/login.svg";
 import toast from "react-hot-toast";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -37,10 +38,14 @@ const Login = () => {
       toast.error(error?.message);
     }
   };
-  if(user || loading) return;
   return (
     <div>
       <div className="flex justify-center items-center min-h-[calc(100vh-260px)]">
+        <Helmet>
+            <title>
+                Login
+            </title>
+        </Helmet>
         <div className="flex w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg  lg:max-w-4xl py-12">
           <div
             className="hidden bg-cover bg-center lg:block lg:w-1/2"
