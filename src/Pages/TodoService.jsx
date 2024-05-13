@@ -1,32 +1,40 @@
 import { Helmet } from "react-helmet";
 import useAuth from "../Hooks/useAuth";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const TodoService = () => {
   const { user } = useAuth();
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    getData();
-  }, [user]);
+  const axiosSecure = useAxiosSecure();
   const getData = async () => {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/todoservice/${user?.email}`
-    );
-    setTodos(data);
+    const { data } = await axiosSecure.get(`/todoservice/${user?.email}`);
+    return data;
   };
+ const {data: todos = [], isLoading, error, isError, refetch} = useQuery({
+    queryFn: async() => await getData(),
+    queryKey: ['services-todo', user?.email]
+ })
+ if (isLoading) {
+    return (
+      <div className="relative h-[65vh] flex items-center justify-center">
+        <span className="loading loading-spinner text-primary loading-md absolute top-50 translate-y-5"></span>
+      </div>
+    );
+  }
+  if(isError || error) {
+    return console.log(error, isError)
+  }
+
   const handleStatus = async (id, previousStatus, serviceStatus) => {
     console.log(id, previousStatus, serviceStatus);
     if (previousStatus === serviceStatus)
       return toast.error("Already accepted");
-    const { data } = await axios.patch(
-      `${import.meta.env.VITE_API_URL}/updatestatus/${id}`,
-      {serviceStatus}
-    );
+    const { data } = await axiosSecure.patch(`/updatestatus/${id}`, {
+      serviceStatus,
+    });
     console.log(data);
-    getData();
+    refetch();
   };
   return (
     <section className="container px-4 mx-auto pt-12">
@@ -127,30 +135,34 @@ const TodoService = () => {
                           </p>
                         </div>
                       </td>
-                     {
-                        todo?.serviceStatus === "Rejected" ?  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-red-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-red-700"></span>
-                          <h2 className="text-sm font-normal ">
-                            {todo.serviceStatus}
-                          </h2>
-                        </div>
-                      </td> :  todo?.serviceStatus === "Pending" ?  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                          <h2 className="text-sm font-normal ">
-                            {todo.serviceStatus}
-                          </h2>
-                        </div>
-                      </td> : <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                          <h2 className="text-sm font-normal ">
-                            {todo.serviceStatus}
-                          </h2>
-                        </div>
-                      </td>
-                     }
+                      {todo?.serviceStatus === "Rejected" ? (
+                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-red-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-red-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {todo.serviceStatus}
+                            </h2>
+                          </div>
+                        </td>
+                      ) : todo?.serviceStatus === "Pending" ? (
+                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {todo.serviceStatus}
+                            </h2>
+                          </div>
+                        </td>
+                      ) : (
+                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {todo.serviceStatus}
+                            </h2>
+                          </div>
+                        </td>
+                      )}
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
                           <button

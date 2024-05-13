@@ -7,71 +7,81 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { BiHide, BiShow } from "react-icons/bi";
 import { Helmet } from "react-helmet";
+import axios from "axios";
 const Register = () => {
-    const [showPass, setShowPass] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const {createUser, user,setUser,  signInWithGoogle,updateUser} = useAuth();
-    const handleGoogleSignIn = async() =>{
-        try {
-            await signInWithGoogle();
-            toast.success('Sign in successfull');
-            navigate( location?.state ? location?.state : "/")
-        }catch(error) {
-            console.log(error);
-            toast.error(error.message);
-        }
+  const [showPass, setShowPass] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { createUser, user, setUser, signInWithGoogle, updateUser } = useAuth();
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithGoogle();
+      const {data} = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        { email: result?.user?.email },
+        { withCredentials: true }
+      );
+      console.log(data);
+      toast.success("Sign in successfull");
+      navigate(location?.state ? location?.state : "/");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
-    const handleSignUp = async e =>{
-        e.preventDefault();
-        const form = e.target;
-        const email = form.email.value;
-        const password = form.password.value;
-        const name = form.name.value;
-        const photo = form.photo.value;
-        if (!/(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{6,})/.test(password)) {
-            toast.error(
-              "Password must be at least 6 characters long and contain at least one special character and one uppercase letter."
-            );
-            return;
-          }
-        try {
-            const result = await createUser(email, password)
-            console.log(result)
-            await updateUser(name, photo)
-            setUser({...user, photoURL: photo, displayName: name,})
-            navigate(location?.state ? location?.state : '/');
-            toast.success('Registration successful')
-        }catch(error){
-            console.log(error)
-            toast.error(error.message)
-        }
+  };
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    const name = form.name.value;
+    const photo = form.photo.value;
+    if (!/(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{6,})/.test(password)) {
+      toast.error(
+        "Password must be at least 6 characters long and contain at least one special character and one uppercase letter."
+      );
+      return;
     }
-    return (
+    try {
+      const result = await createUser(email, password);
+      console.log(result);
+      const {data} = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        { email: result?.user?.email },
+        { withCredentials: true }
+      );
+      console.log(data);
+      await updateUser(name, photo);
+      setUser({ ...result?.user, photoURL: photo, displayName: name });
+      navigate(location?.state ? location?.state : "/");
+      toast.success("Registration successful");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
+  return (
     <div>
-        <Helmet>
-            <title>
-                Register
-            </title>
-        </Helmet>
+      <Helmet>
+        <title>Register</title>
+      </Helmet>
       <div className="flex justify-center items-center min-h-[calc(100vh-260px)]">
         <div className="flex w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg  lg:max-w-4xl my-4">
           <div className="w-full px-6 py-8 md:px-8 lg:w-1/2">
             <div className="flex justify-center mx-auto">
-              <img
-                className="w-auto h-7 sm:h-8"
-                src={logo}
-                alt=""
-              />
+              <img className="w-auto h-7 sm:h-8" src={logo} alt="" />
             </div>
 
             <p className="mt-3 text-xl text-center text-gray-600 ">
               Register to explore more features!
             </p>
 
-            <div onClick={handleGoogleSignIn} className="flex cursor-pointer items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg   hover:bg-gray-50 ">
+            <div
+              onClick={handleGoogleSignIn}
+              className="flex cursor-pointer items-center justify-center mt-4 text-gray-600 transition-colors duration-300 transform border rounded-lg   hover:bg-gray-50 "
+            >
               <div className="px-4 py-2">
-                <FaGoogle/>
+                <FaGoogle />
               </div>
 
               <span className="w-5/6 px-4 py-3 font-bold text-center">
@@ -97,7 +107,7 @@ const Register = () => {
                   Username
                 </label>
                 <input
-                required
+                  required
                   id="name"
                   autoComplete="name"
                   name="name"
@@ -113,7 +123,7 @@ const Register = () => {
                   Photo URL
                 </label>
                 <input
-                required
+                  required
                   id="photo"
                   autoComplete="photo"
                   name="photo"
@@ -129,7 +139,7 @@ const Register = () => {
                   Email Address
                 </label>
                 <input
-                required
+                  required
                   id="LoggingEmailAddress"
                   autoComplete="email"
                   name="email"
@@ -138,34 +148,34 @@ const Register = () => {
                 />
               </div>
               <div className="space-y-2">
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <div className="relative">
-              <input
-                type={showPass ? "text" : "password"}
-                // onChange={(e) => validatePassword(e.target.value)}
-                placeholder="password"
-                name="password"
-                id="password"
-                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300"
-                required
-              />
-              <div>
-                {showPass ? (
-                  <BiShow
-                    onClick={() => setShowPass(false)}
-                    className="text-2xl absolute top-3 right-2"
+                <label className="label">
+                  <span className="label-text">Password</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    // onChange={(e) => validatePassword(e.target.value)}
+                    placeholder="password"
+                    name="password"
+                    id="password"
+                    className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg    focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300"
+                    required
                   />
-                ) : (
-                  <BiHide
-                    onClick={() => setShowPass(true)}
-                    className="text-2xl absolute top-3 right-2"
-                  />
-                )}
+                  <div>
+                    {showPass ? (
+                      <BiShow
+                        onClick={() => setShowPass(false)}
+                        className="text-2xl absolute top-3 right-2"
+                      />
+                    ) : (
+                      <BiHide
+                        onClick={() => setShowPass(true)}
+                        className="text-2xl absolute top-3 right-2"
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
               <div className="mt-6">
                 <button
                   type="submit"

@@ -5,16 +5,24 @@ import { FaGoogle } from "react-icons/fa6";
 import login from "./../../assets/login.svg";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signIn, signInWithGoogle,user, loading } = useAuth();
- 
+  const { signIn, signInWithGoogle } = useAuth();
+
   //handle googleSignIn
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      console.log(result);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        { email: result?.user?.email },
+        { withCredentials: true }
+      );
+      console.log(data);
       toast.success("Sign in successfull");
       navigate(location?.state ? location?.state : "/");
     } catch (error) {
@@ -31,6 +39,12 @@ const Login = () => {
     try {
       const result = await signIn(email, password);
       console.log(result);
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/jwt`,
+        { email: result?.user?.email },
+        { withCredentials: true }
+      );
+      console.log(data);
       navigate(location?.state ? location?.state : "/");
       toast.success("Sign in successfull");
     } catch (error) {
@@ -42,9 +56,7 @@ const Login = () => {
     <div>
       <div className="flex justify-center items-center min-h-[calc(100vh-260px)]">
         <Helmet>
-            <title>
-                Login
-            </title>
+          <title>Login</title>
         </Helmet>
         <div className="flex w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-lg  lg:max-w-4xl py-12">
           <div

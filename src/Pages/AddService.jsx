@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 function AddService() {
     const {user} = useAuth();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure();
     const handleFormSubmit = async(e) =>{
         e.preventDefault();
         const form = e.target;
@@ -29,7 +30,7 @@ function AddService() {
             price
         }
         try{
-            const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/addservices`, serviceData)
+            const {data} = await axiosSecure.post(`/addservices`, serviceData)
             console.table(data)
             toast.success('Service posted successfully');
             navigate('/manage')

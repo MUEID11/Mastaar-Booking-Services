@@ -1,29 +1,33 @@
-import { useEffect, useState } from "react";
 import useAuth from "../Hooks/useAuth";
-import axios from "axios";
 import { Helmet } from "react-helmet";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 const BookService = () => {
-  const [bookedservices, setBookedServices] = useState([]);
   const { user } = useAuth();
-
-  useEffect(() => {
-    const getServices = async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/bookedservices/${user?.email}`
+  const axiosSecure = useAxiosSecure();
+  const getServices = async () => {
+    const { data } = await axiosSecure.get(`/bookedservices/${user?.email}`);
+    return(data);
+  };
+  const {data: bookedservices = [],isLoading, isError,error}= useQuery({
+    queryFn: async()=> getServices(),
+    queryKey: ['booked-services', user?.email]
+  })
+  if(isLoading){
+    return (
+        <div className="relative h-[65vh] flex items-center justify-center">
+          <span className="loading loading-spinner text-primary loading-md absolute top-50 translate-y-5"></span>
+        </div>
       );
-      setBookedServices(data);
-      console.log(data);
-    };
-    getServices();
-  }, [user]);
+  }
+  console.log(error, isError)
   return (
     <section className="container px-4 mx-auto pt-12">
       <div className="flex items-center gap-x-3">
         <Helmet>
-            <title>
-                Booked Services
-            </title>
+          <title>Booked Services</title>
         </Helmet>
         <h2 className="text-lg font-medium ">Booked services</h2>
 
@@ -80,13 +84,12 @@ const BookService = () => {
                       </button>
                     </th>
 
-
                     <th
-                    scope="col"
+                      scope="col"
                       className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500"
                     >
                       Booking request
-                    </th> 
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="">
@@ -111,20 +114,26 @@ const BookService = () => {
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
                         {bookedService?.price}
                       </td>
-                      
-                     {
-                        bookedService?.serviceStatus === "Pending" ? <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                        <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-yellow-700"></span>
-                          <h2 className="text-sm font-normal ">{bookedService?.serviceStatus}</h2>
-                        </div>
-                      </td> :  <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
-                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                            <h2 className="text-sm font-normal ">{bookedService?.serviceStatus}</h2>
+
+                      {bookedService?.serviceStatus === "Pending" ? (
+                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-yellow-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-yellow-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {bookedService?.serviceStatus}
+                            </h2>
                           </div>
                         </td>
-                     }
+                      ) : (
+                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {bookedService?.serviceStatus}
+                            </h2>
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
@@ -133,6 +142,7 @@ const BookService = () => {
           </div>
         </div>
       </div>
+      <Link to='/all' className="btn btn-sm my-6">Book Services</Link>
     </section>
   );
 };

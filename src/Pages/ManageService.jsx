@@ -1,34 +1,55 @@
 import { useEffect, useState } from "react";
 import useAuth from "../Hooks/useAuth";
-import axios from "axios";
+
 import { RiPresentationLine } from "react-icons/ri";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { Helmet } from "react-helmet";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
+
 const ManageService = () => {
   //modal
-  const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
-  //   const [startDate, setStartDate] = useState(new Date());
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const axiosSecure = useAxiosSecure();
   const openModal = () => {
     setIsModalOpen(true); // Open the modal
   };
-
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
   };
   const { user } = useAuth();
-  const [services, setServices] = useState([]);
 
-  useEffect(() => {
-    getServices();
-  }, [user]);
+  //tanstack
   const getServices = async () => {
-    const { data } = await axios.get(
-      `${import.meta.env.VITE_API_URL}/serviceprovider/${user?.email}`
-    );
-    setServices(data);
+    const { data } = await axiosSecure(`/serviceprovider/${user?.email}`);
+    return data;
   };
+  const {
+    data: services = [],
+    isLoading,
+    refetch,
+    isError,
+    error,
+  } = useQuery({
+    queryFn: async() =>await getServices(),
+    queryKey: ["manage-services", user?.email],
+  });
+  if (isLoading) {
+    return (
+      <div className="relative h-[65vh] flex items-center justify-center">
+        <span className="loading loading-spinner text-primary loading-md absolute top-50 translate-y-5"></span>
+      </div>
+    );
+  }
+  if(isError || error) {
+    return console.log(error, isError)
+  }
+  //   useEffect(() => {
+  //     getServices();
+  //   }, [user]);
+
 
   const handleDelete = async (id) => {
     try {
@@ -44,9 +65,7 @@ const ManageService = () => {
         console.log(result);
         if (result.isConfirmed) {
           try {
-            const { data } = await axios.delete(
-              `${import.meta.env.VITE_API_URL}/delete/${id}`
-            );
+            const { data } = await axiosSecure.delete(`/delete/${id}`);
             if (data.deletedCount > 0) {
               Swal.fire({
                 title: "Deleted!",
@@ -58,9 +77,10 @@ const ManageService = () => {
             console.log(err);
             toast.error(err.message);
           }
-          getServices();
           closeModal();
           toast.success("Deleted successfully");
+          refetch();
+          //or we can use queryClient.invalidateQuieries({queryKey: ['manage-services']})
         }
       });
     } catch (error) {
@@ -68,6 +88,8 @@ const ManageService = () => {
       toast.error(error.message);
     }
   };
+
+
   const handleSubmit = async (e, id) => {
     e.preventDefault();
     const form = e.target;
@@ -90,13 +112,10 @@ const ManageService = () => {
       description,
     };
     try {
-      const { data } = await axios.put(
-        `${import.meta.env.VITE_API_URL}/update/${id}`,
-        serviceData
-      );
+      const { data } = await axiosSecure.put(`/update/${id}`, serviceData);
       console.log(data);
       toast.success("Service Updated Succesfully");
-      getServices();
+      refetch();
       closeModal();
     } catch (error) {
       console.log(error.message);
@@ -106,13 +125,11 @@ const ManageService = () => {
   console.log(services);
   return (
     <section className="container px-4 mx-auto pt-12">
-        <Helmet>
-            <title>
-                Manage Services
-            </title>
-        </Helmet>
+      <Helmet>
+        <title>Manage Services</title>
+      </Helmet>
       <div className="flex items-center gap-x-3">
-        <h2 className="text-lg font-medium text-gray-800 ">
+        <h2 className="text-lg font-medium ">
           Services you are providing
         </h2>
 
@@ -433,6 +450,7 @@ const ManageService = () => {
           </div>
         </div>
       )}
+      <Link to="/add" className="btn btn-sm my-6">Add services</Link>
     </section>
   );
 };

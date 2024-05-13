@@ -1,5 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaDollarSign, FaRegHandPointRight } from "react-icons/fa6";
 import { Link, useParams } from "react-router-dom";
 import useAuth from "../Hooks/useAuth";
@@ -7,12 +6,42 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import toast from "react-hot-toast";
 import { Helmet } from "react-helmet";
+import useAxiosSecure from "../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 const ServiceDetails = () => {
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
   const [startDate, setStartDate] = useState(new Date());
-
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
+  const { id } = useParams();
+  const getService = async () => {
+    const { data } = await axiosSecure.get(`/service/${id}`);
+    return data;
+  };
+  const { data: service = {}, isLoading } = useQuery({
+    queryFn: async () => await getService(),
+    queryKey: ["service-details", user?.email],
+  });
+  if (isLoading) {
+    return (
+      <div className="relative h-[65vh] flex items-center justify-center">
+        <span className="loading loading-spinner text-primary loading-md absolute top-50 translate-y-5"></span>
+      </div>
+    );
+  }
+  const {
+    _id,
+    location,
+    providerImage,
+    imageUrl,
+    description,
+    providerName,
+    providerEmail,
+    name,
+    price,
+  } = service || {};
   const openModal = () => {
     setIsModalOpen(true); // Open the modal
   };
@@ -55,40 +84,17 @@ const ServiceDetails = () => {
       location,
     };
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/bookservice`,
-        bookingData
-      );
+      const { data } = await axiosSecure.post(`/bookservice`, bookingData);
       toast.success("Service Booking Successfull");
       closeModal();
       console.log(data);
     } catch (error) {
       console.log(error.message);
-    }
+      toast.error(error.response.data)
+      closeModal();
+      }
   };
-  const { user } = useAuth();
-  const [service, setService] = useState({});
-  const { id } = useParams();
-  useEffect(() => {
-    const getService = async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/service/${id}`
-      );
-      setService(data);
-    };
-    getService();
-  }, [id]);
-  const {
-    _id,
-    location,
-    providerImage,
-    imageUrl,
-    description,
-    providerName,
-    providerEmail,
-    name,
-    price,
-  } = service || {};
+
   return (
     <div>
       <section className=" dark:bg-gray-900">
