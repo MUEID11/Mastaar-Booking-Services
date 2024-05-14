@@ -17,7 +17,7 @@ const AllServices = () => {
   };
   const { data: services = [], isLoading ,refetch} = useQuery({
     queryFn: async () => await getData(),
-    queryKey: ["services", user?.email,searchText],
+    queryKey: ["all-services", user?.email,],
   });
   if (isLoading) {
     return (
@@ -45,6 +45,7 @@ const AllServices = () => {
   };
   const handleReset =async()=> {
     setSearchText('');
+    refetch("services")
   }
   return (
     <div className="container mx-auto my-12 p-4">

@@ -3,13 +3,13 @@ import ServiceCard from "../Components/ServiceCard";
 
 const PopularServices = ({ services }) => {
   return (
-    <div className="container mx-auto my-20 p-4">
+    <div className="container mx-auto mt-8 sm:mt-20 p-4">
       <div className="text-center space-y-4">
         <h2 className="text-xl sm:text-3xl font-bold">Popular Services</h2>
-        <p>
+        <p className="max-w-2xl mx-auto dark:text-gray-600" >
           Teaching Services of Mastaar works closely with your child’s school to{" "}
-          <br /> provide an inclusive and equitable instrumental tuition program
-          and <br /> welcome you as you embark upon this journey with us.
+          provide an inclusive and equitable instrumental tuition program
+          and welcome you as you embark upon this journey with us.
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 my-6">

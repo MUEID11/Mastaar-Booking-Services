@@ -3,6 +3,7 @@ import PopularServices from "./PopularServices";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../Hooks/useAuth";
+import Teachers from "./Teachers";
 
 const Home = () => {
     const {user} = useAuth();
@@ -19,7 +20,7 @@ const Home = () => {
     error,
   } = useQuery({
     queryFn: async () => await getServices(),
-    queryKey: ["services",user?.email],
+    queryKey: ["limited-services", user?.email],
   });
 
   console.log(isError, error);
@@ -34,6 +35,7 @@ const Home = () => {
       <div className="container mx-auto my-16">
         <Slider services={services} />
         <PopularServices services={services} />
+        <Teachers/>
       </div>
     );
 };
