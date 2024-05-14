@@ -44,6 +44,8 @@ const Register = () => {
     }
     try {
       const result = await createUser(email, password);
+      await updateUser(name, photo);
+      setUser({ ...result?.user, photoURL: photo, displayName: name });
       console.log(result);
       const {data} = await axios.post(
         `${import.meta.env.VITE_API_URL}/jwt`,
@@ -51,8 +53,6 @@ const Register = () => {
         { withCredentials: true }
       );
       console.log(data);
-      await updateUser(name, photo);
-      setUser({ ...result?.user, photoURL: photo, displayName: name });
       navigate(location?.state ? location?.state : "/");
       toast.success("Registration successful");
     } catch (error) {

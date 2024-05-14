@@ -4,6 +4,8 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../Hooks/useAuth";
 import Teachers from "./Teachers";
+import Faq from "./Faq";
+import Testimonial from "./Testimonial";
 
 const Home = () => {
     const {user} = useAuth();
@@ -16,14 +18,10 @@ const Home = () => {
   const {
     data: services = [],
     isLoading,
-    isError,
-    error,
   } = useQuery({
     queryFn: async () => await getServices(),
     queryKey: ["limited-services", user?.email],
   });
-
-  console.log(isError, error);
   if (isLoading) {
     return (
       <div className="relative h-[65vh] flex items-center justify-center">
@@ -36,6 +34,8 @@ const Home = () => {
         <Slider services={services} />
         <PopularServices services={services} />
         <Teachers/>
+        <Testimonial/>
+        <Faq/>
       </div>
     );
 };
