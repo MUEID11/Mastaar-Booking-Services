@@ -7,7 +7,6 @@ import { useState } from "react";
 
 const AllServices = () => {
   const { user } = useAuth();
-  const [search, setSearch] = useState("");
   const [searchText, setSearchText] = useState('')
   const getData = async () => {
     const { data } = await axios.get(
@@ -18,7 +17,7 @@ const AllServices = () => {
   };
   const { data: services = [], isLoading ,refetch} = useQuery({
     queryFn: async () => await getData(),
-    queryKey: ["services", user?.email],
+    queryKey: ["services", user?.email,searchText],
   });
   if (isLoading) {
     return (
@@ -41,10 +40,12 @@ const AllServices = () => {
   const handleSearch = async(e) => {
     e.preventDefault();
     console.log("Search text:", searchText);
-    setSearch(searchText);
-    setSearch('');
-    refetch()
+    setSearchText(searchText);
+    await refetch()
   };
+  const handleReset =async()=> {
+    setSearchText('');
+  }
   return (
     <div className="container mx-auto my-12 p-4">
       <Helmet>
@@ -80,6 +81,9 @@ const AllServices = () => {
             </button>
           </div>
         </form>
+        <button onClick={handleReset} className="px-1 md:px-4 py-3 text-sm font-medium tracking-wider text-gray-100 uppercase transition-colors duration-300 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:bg-gray-600 focus:outline-none">
+              View all
+            </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
         {services.map((service) => (
