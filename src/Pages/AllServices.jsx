@@ -1,13 +1,14 @@
 import ServiceCard from "../Components/ServiceCard";
 import { Helmet } from "react-helmet";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAuth from "../Hooks/useAuth";
 import { useState } from "react";
 
 const AllServices = () => {
   const { user } = useAuth();
   const [searchText, setSearchText] = useState("");
+  const queryClient = useQueryClient();
   const getData = async () => {
     const { data } = await axios.get(
       `${import.meta.env.VITE_API_URL}/allservices`,
@@ -21,7 +22,7 @@ const AllServices = () => {
     refetch,
   } = useQuery({
     queryFn: async () => await getData(),
-    queryKey: ["all-services", user?.email],
+    queryKey: ["allservices", user?.email],
   });
   if (isLoading) {
     return (
@@ -39,7 +40,7 @@ const AllServices = () => {
   const handleReset = () => {
     console.log("Resetting search");
     setSearchText("");
-    refetch(["all-services", user?.email]);
+    queryClient.invalidateQueries(['allservices'])
   };
 
   return (

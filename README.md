@@ -1,9 +1,15 @@
-# React + Vite
+# Teaching Services Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Live Site URL
+[Teaching Services](https://b9-assignment11-client.web.app)
 
-Currently, two official plugins are available:
+## Assignment_category_0002
+## About
+This website offers a comprehensive platform for accessing various teaching services, catering to diverse educational needs.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-# b9a11-client-side-MUEID11
+## Key Features
+- **Wide Range of Services**: Access a diverse range of teaching services covering various subjects, levels, and formats, including one-on-one tutoring, group classes, and online sessions.
+- **Expert Instructors**: Benefit from highly qualified and experienced instructors who are passionate about education and committed to student success.
+- **Customized Learning Experience**: Enjoy a personalized learning experience tailored to individual needs and preferences, with flexible curriculum, scheduling, and learning goals.
+- **Interactive Learning Environment**: Engage in interactive learning activities and discussions to enhance understanding and retention of course material.
+- **Convenient Booking and Management**: Easily book, manage, and track your learning sessions through a user-friendly interface, with convenient access to schedules, progress reports, and communication tools.
