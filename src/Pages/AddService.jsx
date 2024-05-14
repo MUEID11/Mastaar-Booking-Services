@@ -5,46 +5,44 @@ import { Helmet } from "react-helmet";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 
 function AddService() {
-    const {user} = useAuth();
-    const navigate = useNavigate();
-    const axiosSecure = useAxiosSecure();
-    const handleFormSubmit = async(e) =>{
-        e.preventDefault();
-        const form = e.target;
-        const providerName = form.providerName.value;
-        const providerEmail = form.providerEmail.value;
-        const providerImage = form.providerImage.value;
-        const name = form.serviceName.value;
-        const imageUrl = form.serviceImage.value;
-        const location = form.location.value;
-        const description = form.description.value;
-        const price = form.price.value;
-        const serviceData = {
-            providerName,
-            providerEmail,
-            providerImage,
-            name,
-            imageUrl,
-            location,
-            description,
-            price
-        }
-        try{
-            const {data} = await axiosSecure.post(`/addservices`, serviceData)
-            console.table(data)
-            toast.success('Service posted successfully');
-            navigate('/manage')
-        }catch(error){
-            console.log(error.message)
-        }
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const providerName = form.providerName.value;
+    const providerEmail = form.providerEmail.value;
+    const providerImage = form.providerImage.value;
+    const name = form.serviceName.value;
+    const imageUrl = form.serviceImage.value;
+    const location = form.location.value;
+    const description = form.description.value;
+    const price = form.price.value;
+    const serviceData = {
+      providerName,
+      providerEmail,
+      providerImage,
+      name,
+      imageUrl,
+      location,
+      description,
+      price,
     };
+    try {
+      const { data } = await axiosSecure.post(`/addservices`, serviceData);
+      console.table(data);
+      toast.success("Service posted successfully");
+      navigate("/manage");
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="p-4 bg-dark dark:text-white container mx-auto">
-        <Helmet>
-            <title>
-                Add Services
-            </title>
-        </Helmet>
+      <Helmet>
+        <title>Add Services</title>
+      </Helmet>
       <div className="text-center mb-8">
         <h1 className="text-xl sm:text-3xl font-bold mb-4">Add Service</h1>
         <p>
@@ -52,150 +50,102 @@ function AddService() {
           passion by adding your teaching services to our platform. Whether you
           specialize in academic subjects, professional skills, hobbies, or
           unique talents, your expertise is invaluable. Empower learners of all
-          ages and backgrounds to grow, learn, and succeed. Together, let's
-          build a diverse community of teachers dedicated to shaping minds,
-          fostering growth, and making a positive impact. Join us in creating a
-          brighter future through education and empowerment.
+          ages and backgrounds to grow, learn, and succeed. Together.
         </p>
       </div>
       <form onSubmit={handleFormSubmit}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="providerName"
-            >
-              Provider Name
-            </label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div>
+            <label htmlFor="userName">User Name</label>
             <input
               required
+              disabled
               defaultValue={user?.displayName}
               id="providerName"
-              autoComplete="providerName"
-              name="providerName"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
               type="text"
+              name="name"
+              className="w-full   dark:bg-gray-800 rounded-md p-2 bg-gray-100  focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="providerEmail"
-            >
-              Provider Email Address
-            </label>
+          <div>
+            <label htmlFor="userEmail">User Email</label>
             <input
               required
               defaultValue={user?.email}
               disabled
               id="providerEmail"
-              autoComplete="email"
               name="providerEmail"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
               type="email"
+              className="w-full  dark:bg-gray-800 rounded-md p-2 bg-gray-100  focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="providerImage"
-            >
-              Provider Image URL
-            </label>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="photo">Image URL</label>
             <input
               required
               defaultValue={user?.photoURL}
               disabled
               id="providerImage"
-              autoComplete="providerImage"
               name="providerImage"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
               type="text"
+              className="w-full  dark:bg-gray-800 rounded-md p-2 bg-gray-100  focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="serviceName"
-            >
-              Service Name
-            </label>
+          <div>
+            <label htmlFor="itemName">Service Name</label>
             <input
               required
+              type="text"
               id="serviceName"
-              autoComplete="serviceName"
               name="serviceName"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              type="text"
+              className="w-full   rounded-md p-2 bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4 col-span-2">
-            <div className="mt-4">
-              <label
-                className="block mb-2 text-sm font-medium text-gray-600"
-                htmlFor="serviceImage"
-              >
-               Service Image URL
-              </label>
-              <input
-                required
-                id="serviceImage"
-                autoComplete="serviceImage"
-                name="serviceImage"
-                className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-                type="text"
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="price"
-            >
-              Price
-            </label>
+          <div>
+            <label htmlFor="itemName">Service Image Url </label>
             <input
               required
+              type="text"
+              id="serviceImage"
+              name="serviceImage"
+              className="w-full   rounded-md p-2 bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </div>
+          <div>
+            <label htmlFor="itemName">Price</label>
+            <input
+              required
+              type="text"
               id="price"
-              autoComplete="price"
               name="price"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              type="number"
+              className="w-full   rounded-md p-2 bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="location"
-            >
-              Service Location
-            </label>
+          <div>
+            <label htmlFor="itemName">Service Location</label>
             <input
               required
-              id="location"
-              autoComplete="location"
-              name="location"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
               type="text"
+              id="location"
+              name="location"
+              className="w-full   rounded-md p-2 bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <div className="mt-4 col-span-2">
-            <label
-              className="block mb-2 text-sm font-medium text-gray-600"
-              htmlFor="description"
-            >
-              Description
-            </label>
-            <textarea
+
+         
+          <div>
+            <label htmlFor="shortDescription">Short Description</label>
+            <input
               required
-              id="description"
-              autoComplete="description"
-              name="description"
-              className="block w-full px-4 py-2 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
-              rows="4"
-            ></textarea>
+              id="shortDescription"
+              name="shortDescription"
+              className="w-full row-span-1 rounded-md p-2  bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+            ></input>
           </div>
         </div>
+
         <div className="mt-6">
           <button
             type="submit"

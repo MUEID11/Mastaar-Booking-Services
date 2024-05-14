@@ -6,7 +6,6 @@ import useAuth from "../Hooks/useAuth";
 import Teachers from "./Teachers";
 import Faq from "./Faq";
 import Testimonial from "./Testimonial";
-
 const Home = () => {
     const {user} = useAuth();
   const getServices = async () => {
