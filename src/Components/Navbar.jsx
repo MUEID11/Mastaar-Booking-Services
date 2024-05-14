@@ -5,7 +5,7 @@ import logo from "./../../public/vite.png";
 import useAuth from "../Hooks/useAuth";
 import { Helmet } from "react-helmet";
 const Navbar = () => {
-  const { user, logOut } = useAuth();
+  const { user, logOut, loading } = useAuth();
   const initialTheme = localStorage.getItem("theme") || "nord";
   const [theme, setTheme] = useState(initialTheme);
   useEffect(() => {
@@ -105,56 +105,63 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end z-50">
-        {!user && (
-          <>
-            <input
-              onChange={handleTheme}
-              type="checkbox"
-              className="toggle toggle-xs sm:toggle-sm mr-3"
-              checked={theme === "sunset"}
-            />
-            <Link
-              to="/login"
-              className="btn btn-sm bg-blue-400 hover:bg-blue-500 text-gray-700"
-            >
-              Login
-            </Link>
-          </>
-        )}
-        {user && (
-          <>
-            <input
-              onChange={handleTheme}
-              type="checkbox"
-              className="toggle toggle-xs sm:toggle-sm mr-3"
-              checked={theme === "sunset"}
-            />
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar"
-              >
-                <div className="w-6 sm:w-10 rounded-full">
-                  <img
-                    alt="Tailwind CSS Navbar component"
-                    src={user?.photoURL}
-                  />
+        {loading ? (
+          <div className="relative">
+            <span className="loading loading-spinner text-primary loading-md absolute translate -top-2 -left-12"></span>
+          </div>
+        ) : (
+          <div>
+            {user ? (
+              <div className="flex items-center justify-center">
+                <input
+                  onChange={handleTheme}
+                  type="checkbox"
+                  className="toggle toggle-xs sm:toggle-sm mr-3"
+                  checked={theme === "sunset"}
+                />
+                <div className="dropdown dropdown-end">
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    className="btn btn-ghost btn-circle avatar"
+                  >
+                    <div className="w-6 sm:w-10 rounded-full">
+                      <img
+                        alt="Tailwind CSS Navbar component"
+                        src={user?.photoURL}
+                      />
+                    </div>
+                  </div>
+                  <ul
+                    tabIndex={0}
+                    className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+                  >
+                    <li>
+                      <a className="justify-between">{user?.displayName}</a>
+                    </li>
+                    <li onClick={logOut}>
+                      <a>Logout</a>
+                    </li>
+                  </ul>
                 </div>
               </div>
-              <ul
-                tabIndex={0}
-                className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a className="justify-between">{user?.displayName}</a>
-                </li>
-                <li onClick={logOut}>
-                  <a>Logout</a>
-                </li>
-              </ul>
-            </div>
-          </>
+            ) : (
+              <div className="flex justify-center items-center">
+                <input
+                  onChange={handleTheme}
+                  type="checkbox"
+                  className="toggle toggle-xs sm:toggle-sm mr-3"
+                  checked={theme === "sunset"}
+                />
+                <Link
+                  to="/login"
+                  className="btn btn-sm bg-blue-400 hover:bg-blue-500 text-gray-700"
+                >
+                  Login
+                </Link>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

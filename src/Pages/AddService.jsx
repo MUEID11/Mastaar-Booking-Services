@@ -94,7 +94,7 @@ function AddService() {
             />
           </div>
           <div>
-            <label htmlFor="itemName">Service Name</label>
+            <label htmlFor="serviceName">Service Name</label>
             <input
               required
               type="text"
@@ -104,7 +104,7 @@ function AddService() {
             />
           </div>
           <div>
-            <label htmlFor="itemName">Service Image Url </label>
+            <label htmlFor="serviceImage">Service Image Url </label>
             <input
               required
               type="text"
@@ -114,17 +114,17 @@ function AddService() {
             />
           </div>
           <div>
-            <label htmlFor="itemName">Price</label>
+            <label htmlFor="price">Price</label>
             <input
               required
-              type="text"
+              type="number"
               id="price"
               name="price"
               className="w-full   rounded-md p-2 bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
           <div>
-            <label htmlFor="itemName">Service Location</label>
+            <label htmlFor="location">Service Location</label>
             <input
               required
               type="text"
@@ -139,8 +139,8 @@ function AddService() {
             <label htmlFor="shortDescription">Short Description</label>
             <input
               required
-              id="shortDescription"
-              name="shortDescription"
+              id="description"
+              name="description"
               className="w-full row-span-1 rounded-md p-2  bg-gray-100 dark:bg-gray-800 focus:border-blue-400 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             ></input>
           </div>
