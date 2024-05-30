@@ -12,16 +12,15 @@ const Register = () => {
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { createUser, user, setUser, signInWithGoogle, updateUser } = useAuth();
+  const { createUser, setUser, signInWithGoogle, updateUser } = useAuth();
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithGoogle();
-      const {data} = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/jwt`,
         { email: result?.user?.email },
         { withCredentials: true }
       );
-      console.log(data);
       toast.success("Sign in successfull");
       navigate(location?.state ? location?.state : "/");
     } catch (error) {
@@ -47,12 +46,12 @@ const Register = () => {
       await updateUser(name, photo);
       setUser({ ...result?.user, photoURL: photo, displayName: name });
       console.log(result);
-      const {data} = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/jwt`,
         { email: result?.user?.email },
         { withCredentials: true }
       );
-      console.log(data);
+
       navigate(location?.state ? location?.state : "/");
       toast.success("Registration successful");
     } catch (error) {

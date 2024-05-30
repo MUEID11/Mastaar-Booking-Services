@@ -22,7 +22,7 @@ const Testimonial = () => {
           <section className="grid grid-cols-1 gap-8 mt-8 xl:mt-12 lg:grid-cols-2 xl:grid-cols-3">
             <div className="p-8 border rounded-lg dark:border-gray-700">
               <p className="leading-loose text-gray-500 dark:text-gray-400">
-                “I can't thank [Your Company Name] enough for their outstanding
+                “I can't thank [Mastaar] enough for their outstanding
                 tutoring service. My grades have improved significantly since I
                 started sessions with them. The tutor's expertise, patience, and
                 encouragement have made learning enjoyable and rewarding.
@@ -50,8 +50,7 @@ const Testimonial = () => {
             <div className="p-8 bg-blue-500 border border-transparent rounded-lg dark:bg-blue-600">
               <p className="leading-loose text-white">
                 “As a busy professional preparing for a certification exam, I
-                was struggling to find time to study effectively. [Your Company
-                Name] came to my rescue with their flexible online tutoring
+                was struggling to find time to study effectively. [Mastarr] came to my rescue with their flexible online tutoring
                 options. The tutor provided tailored study plans, insightful
                 explanations, and valuable exam tips that boosted my confidence
                 and helped me ace the exam. Thank you for your exceptional

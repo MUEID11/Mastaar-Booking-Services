@@ -3,6 +3,7 @@ import useAuth from "../Hooks/useAuth";
 import toast from "react-hot-toast";
 import useAxiosSecure from "../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import { BiDollar } from "react-icons/bi";
 
 const TodoService = () => {
   const { user } = useAuth();
@@ -11,30 +12,37 @@ const TodoService = () => {
     const { data } = await axiosSecure.get(`/todoservice/${user?.email}`);
     return data;
   };
- const {data: todos = [], isLoading, error, isError, refetch} = useQuery({
-    queryFn: async() => await getData(),
-    queryKey: ['services-todo', user?.email]
- })
- if (isLoading) {
+  const {
+    data: todos = [],
+    isLoading,
+    error,
+    isError,
+    refetch,
+  } = useQuery({
+    queryFn: async () => await getData(),
+    queryKey: ["servicestodo"],
+  });
+  if (isLoading) {
     return (
       <div className="relative h-[65vh] flex items-center justify-center">
         <span className="loading loading-spinner text-primary loading-md absolute top-50 translate-y-5"></span>
       </div>
     );
   }
-  if(isError || error) {
-    return console.log(error, isError)
+  if (isError || error) {
+    return console.log(error, isError);
   }
 
-  const handleStatus = async (id, previousStatus, serviceStatus) => {
-    console.log(id, previousStatus, serviceStatus);
-    if (previousStatus === serviceStatus)
-      return toast.error("Already accepted");
-    const { data } = await axiosSecure.patch(`/updatestatus/${id}`, {
-      serviceStatus,
-    });
-    console.log(data);
-    refetch();
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const { data } = await axiosSecure.patch(`/updatestatus/${id}`, {
+        serviceStatus: newStatus,
+      });
+      console.log(data);
+      refetch();
+    } catch (error) {
+      console.error("Error updating service status:", error);
+    }
   };
   return (
     <section className="container px-4 mx-auto pt-12">
@@ -53,7 +61,8 @@ const TodoService = () => {
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
             <div className="overflow-hidden border border-gray-200  md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
+              {
+                todos.length > 0 ? <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
                     <th
@@ -123,7 +132,7 @@ const TodoService = () => {
                       </td>
 
                       <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
-                        {todo.price}
+                       <span className="flex justify-center items-center"> {todo.price} <BiDollar/></span>
                       </td>
                       <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-2">
@@ -135,35 +144,45 @@ const TodoService = () => {
                           </p>
                         </div>
                       </td>
-                      {todo?.serviceStatus === "Rejected" ? (
-                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-red-700">
-                            <span className="h-1.5 w-1.5 rounded-full bg-red-700"></span>
+                      <td>
+                        <select
+                          value={todo.serviceStatus}
+                          disabled={todo?.serviceStatus === "Completed"}
+                          onChange={(e) =>
+                            handleStatusChange(todo._id, e.target.value)
+                          }
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Working">Working</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                        {todo?.serviceStatus === "Pending" ? (
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100 text-yellow-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-yellow-700"></span>
                             <h2 className="text-sm font-normal ">
-                              {todo.serviceStatus}
+                              {todo?.serviceStatus}
                             </h2>
                           </div>
-                        </td>
-                      ) : todo?.serviceStatus === "Pending" ? (
-                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
+                        ) : todo?.serviceStatus === "Working" ? (
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-blue-100 text-blue-700">
+                            <span className="h-1.5 w-1.5 rounded-full bg-blue-700"></span>
+                            <h2 className="text-sm font-normal ">
+                              {todo?.serviceStatus}
+                            </h2>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-green-100 text-green-700">
                             <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
                             <h2 className="text-sm font-normal ">
-                              {todo.serviceStatus}
+                              {todo?.serviceStatus}
                             </h2>
                           </div>
-                        </td>
-                      ) : (
-                        <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 bg-yellow-100/60 text-green-700">
-                            <span className="h-1.5 w-1.5 rounded-full bg-green-700"></span>
-                            <h2 className="text-sm font-normal ">
-                              {todo.serviceStatus}
-                            </h2>
-                          </div>
-                        </td>
-                      )}
-                      <td className="px-4 py-4 text-sm whitespace-nowrap">
+                        )}
+                      </td>
+
+                      {/* <td className="px-4 py-4 text-sm whitespace-nowrap">
                         <div className="flex items-center gap-x-6">
                           <button
                             onClick={() =>
@@ -191,7 +210,6 @@ const TodoService = () => {
                               />
                             </svg>
                           </button>
-                          {/* reject button */}
                           <button
                             onClick={() =>
                               handleStatus(
@@ -219,11 +237,12 @@ const TodoService = () => {
                             </svg>
                           </button>
                         </div>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
-              </table>
+              </table> : <div className="text-xl sm:text-2xl font-bold text-center">Add more services to get order, Foucusing on imporving your gig quality might help</div>
+              }
             </div>
           </div>
         </div>

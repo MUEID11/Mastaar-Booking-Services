@@ -17,12 +17,11 @@ const Login = () => {
     try {
       const result = await signInWithGoogle();
       console.log(result);
-      const { data } = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/jwt`,
         { email: result?.user?.email },
         { withCredentials: true }
       );
-      console.log(data);
       toast.success("Sign in successfull");
       navigate(location?.state ? location?.state : "/");
     } catch (error) {
@@ -39,12 +38,11 @@ const Login = () => {
     try {
       const result = await signIn(email, password);
       console.log(result);
-      const { data } = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API_URL}/jwt`,
         { email: result?.user?.email },
         { withCredentials: true }
       );
-      console.log(data);
       navigate(location?.state ? location?.state : "/");
       toast.success("Sign in successfull");
     } catch (error) {

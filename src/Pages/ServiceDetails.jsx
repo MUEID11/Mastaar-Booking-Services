@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const ServiceDetails = () => {
   //modal
-  const [isModalOpen, setIsModalOpen] = useState(false); // State variable to manage modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [startDate, setStartDate] = useState(new Date());
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
@@ -22,7 +22,7 @@ const ServiceDetails = () => {
   };
   const { data: service = {}, isLoading } = useQuery({
     queryFn: async () => await getService(),
-    queryKey: ["service-details", user?.email],
+    queryKey: ["details"],
   });
   if (isLoading) {
     return (

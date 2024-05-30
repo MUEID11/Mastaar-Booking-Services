@@ -38,7 +38,7 @@ const ManageService = () => {
     error,
   } = useQuery({
     queryFn: async() =>await getServices(),
-    queryKey: ["manage-services", user?.email],
+    queryKey: ["manageservices"],
   });
   if (isLoading) {
     return (

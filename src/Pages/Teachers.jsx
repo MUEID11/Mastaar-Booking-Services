@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa6";
-import useAuth from "../Hooks/useAuth";
+// import useAuth from "../Hooks/useAuth";
 
 const Teachers = () => {
-    const {user} = useAuth();
+    // const {user} = useAuth();
     const getData = async () => {
         const { data } = await axios.get(
           `${import.meta.env.VITE_API_URL}/teacher`,
@@ -13,7 +13,7 @@ const Teachers = () => {
       };
       const { data: services = [], isLoading } = useQuery({
         queryFn: async () => await getData(),
-        queryKey: ["teacherservices", user?.email],
+        queryKey: ["teacherservices"],
       });
       if (isLoading) {
         return (

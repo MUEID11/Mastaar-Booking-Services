@@ -12,6 +12,7 @@ const useAxiosSecure = () => {
     const navigate = useNavigate();
     //response interceptor
     axiosSecure.interceptors.response.use(res =>{
+        console.log(res)
         return res
     },
     async error => {
