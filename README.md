@@ -4,6 +4,7 @@
 [Teaching Services](https://b9-assignment11-client.web.app)
 
 ## Assignment_category_0002
+
 ## About
 This website offers a comprehensive platform for accessing various teaching services, catering to diverse educational needs.
 
@@ -13,3 +14,13 @@ This website offers a comprehensive platform for accessing various teaching serv
 - **Customized Learning Experience**: Enjoy a personalized learning experience tailored to individual needs and preferences, with flexible curriculum, scheduling, and learning goals.
 - **Interactive Learning Environment**: Engage in interactive learning activities and discussions to enhance understanding and retention of course material.
 - **Convenient Booking and Management**: Easily book, manage, and track your learning sessions through a user-friendly interface, with convenient access to schedules, progress reports, and communication tools.
+  
+## Technology Used
+- **React**
+- **Express.js**
+- **Node.js**
+- **MongoDB**
+- **Firebase**
+
+## Access Information
+- **Live Site URL**: [Teaching Services](https://b9-assignment11-client.web.app)
