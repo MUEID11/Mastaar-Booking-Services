@@ -22,5 +22,14 @@ This website offers a comprehensive platform for accessing various teaching serv
 - **MongoDB**
 - **Firebase**
 
+## Getting Started
+1. **Clone the Repository**: From [GitHub URL].
+2. **Install Dependencies**: Run `npm install`.
+3. **Set Environment Variables**: For Firebase and MongoDB.
+4. **Start the Server**: Run `npm start`.
+6. **Launch the Client**: In the client directory, run `npm start`.
+7. **Explore the Platform**: Use the live site URL.
+
+   
 ## Access Information
 - **Live Site URL**: [Teaching Services](https://b9-assignment11-client.web.app)
